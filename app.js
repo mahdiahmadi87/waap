@@ -239,21 +239,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Running on ${PORT}`);
 });
-
-/* Run these commands before running the APIs: 
-
-CREATE DATABASE waap_db;
-USE waap_db;
-CREATE TABLE videos (
-  id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
-);
-CREATE TABLE songs (
-  id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
-);
-CREATE TABLE docs (
-  id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
-); 
-*/
