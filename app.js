@@ -5,11 +5,10 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.use(express.json());
 
-// تنظیمات اتصال به دیتابیس
 const pool = mysql.createPool({
   host: 'localhost',
-  user: '',
-  password: '',
+  user: '<USERNAME>',
+  password: '<PASSWORDS>',
   database: 'waap_db',
   waitForConnections: true,
   connectionLimit: 10,

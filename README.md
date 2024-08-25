@@ -21,3 +21,4 @@ CREATE TABLE docs (
   url TEXT NOT NULL
 );
 ```
+* then replace <USERNAME> and <PASSWORDS> with your mysql username and passwords
