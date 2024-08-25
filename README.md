@@ -1,9 +1,9 @@
-# waap
-Web app with Express JS and React
+# Waap
+Weblog Web App with Express JS and React
 
-## installation
+## Installation
 
-### Run these commands before running the APIs: 
+### Create MySQL tables 
 
 ``` sql
 CREATE DATABASE waap_db;
@@ -21,4 +21,14 @@ CREATE TABLE docs (
   url TEXT NOT NULL
 );
 ```
-* then replace <USERNAME> and <PASSWORDS> with your mysql username and passwords
+
+
+#### Create MySQL account
+
+``` sql
+CREATE USER '<USERNAME>'@'localhost' IDENTIFIED BY '<PASSWORDS>';
+GRANT ALL PRIVILEGES ON *.* TO '<USERNAME>'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+exit;
+```
+then replace `<USERNAME>` and `<PASSWORDS>` in app.js
