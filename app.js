@@ -1,21 +1,15 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid');
+const sqlite3 = require('sqlite3').verbose();
+
+// Connect to a database (in this example, a new file-based database)
+const db = new sqlite3.Database('waap_db.db');
 
 const app = express();
 app.use(express.json());
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: '<USERNAME>',
-  password: '<PASSWORDS>',
-  database: 'waap_db',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
-
-// videos
+// Video
 app.put('/videos/upload', async (req, res) => {
   const { url } = req.body;
   if (!url) {
@@ -23,16 +17,13 @@ app.put('/videos/upload', async (req, res) => {
   }
 
   const id = uuidv4();
-  try {
-    const [result] = await pool.execute(
-      'INSERT INTO videos (id, url) VALUES (?, ?)',
-      [id, url]
-    );
+  db.run('INSERT INTO videos (id, url) VALUES (?, ?)', [id, url], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error saving video' });
+    }
     res.status(201).json({ id, url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error saving video' });
-  }
+  });
 });
 
 app.get('/videos', async (req, res) => {
@@ -40,30 +31,26 @@ app.get('/videos', async (req, res) => {
   if (!id) {
     return res.status(400).json({ error: 'video ID is required' });
   }
-
-  try {
-    const [rows] = await pool.execute(
-      'SELECT url FROM videos WHERE id = ?',
-      [id]
-    );
+  db.all('SELECT url FROM videos WHERE id = ?', [id], (error, rows) => {
+    if (error) {
+    console.error(error);
+    res.status(500).json({ error: 'error finding video' });
+    }
     if (rows.length === 0) {
       return res.status(404).json({ error: 'video not found' });
     }
     res.json({ url: rows[0].url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding video' });
-  }
+  });
 });
 
 app.get('/videos/all', async (req, res) => {
-  try {
-    const [rows] = await pool.execute('SELECT id, url FROM videos');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding videos' });
-  }
+  db.all('SELECT id, url FROM videos', [], (error, rows) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error finding videos' });
+    }
+    res.json(rows); 
+  });
 });
 
 app.delete('/videos/delete', async (req, res) => {
@@ -72,19 +59,12 @@ app.delete('/videos/delete', async (req, res) => {
     return res.status(400).json({ error: 'video ID is required' });
   }
 
-  try {
-    const [result] = await pool.execute(
-      'DELETE FROM videos WHERE id = ?',
-      [id]
-    );
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'video not found' });
+  db.run('DELETE FROM videos WHERE id = ?', [id], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error deleting video' });
     }
-    res.json({ message: 'video deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error deleting video' });
-  }
+    res.json({ message: 'video deleted successfully' });  });
 });
 
 
@@ -96,16 +76,13 @@ app.put('/songs/upload', async (req, res) => {
   }
 
   const id = uuidv4();
-  try {
-    const [result] = await pool.execute(
-      'INSERT INTO songs (id, url) VALUES (?, ?)',
-      [id, url]
-    );
+  db.run('INSERT INTO songs (id, url) VALUES (?, ?)', [id, url], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error saving song' });
+    }
     res.status(201).json({ id, url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error saving song' });
-  }
+  });
 });
 
 app.get('/songs', async (req, res) => {
@@ -113,30 +90,26 @@ app.get('/songs', async (req, res) => {
   if (!id) {
     return res.status(400).json({ error: 'song ID is required' });
   }
-
-  try {
-    const [rows] = await pool.execute(
-      'SELECT url FROM songs WHERE id = ?',
-      [id]
-    );
+  db.all('SELECT url FROM songs WHERE id = ?', [id], (error, rows) => {
+    if (error) {
+    console.error(error);
+    res.status(500).json({ error: 'error finding song' });
+    }
     if (rows.length === 0) {
       return res.status(404).json({ error: 'song not found' });
     }
     res.json({ url: rows[0].url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding song' });
-  }
+  });
 });
 
 app.get('/songs/all', async (req, res) => {
-  try {
-    const [rows] = await pool.execute('SELECT id, url FROM songs');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding songs' });
-  }
+  db.all('SELECT id, url FROM songs', [], (error, rows) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error finding songs' });
+    }
+    res.json(rows); 
+  });
 });
 
 app.delete('/songs/delete', async (req, res) => {
@@ -145,19 +118,12 @@ app.delete('/songs/delete', async (req, res) => {
     return res.status(400).json({ error: 'song ID is required' });
   }
 
-  try {
-    const [result] = await pool.execute(
-      'DELETE FROM songs WHERE id = ?',
-      [id]
-    );
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'song not found' });
+  db.run('DELETE FROM songs WHERE id = ?', [id], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error deleting song' });
     }
-    res.json({ message: 'song deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error deleting song' });
-  }
+    res.json({ message: 'song deleted successfully' });  });
 });
 
 
@@ -169,16 +135,13 @@ app.put('/docs/upload', async (req, res) => {
   }
 
   const id = uuidv4();
-  try {
-    const [result] = await pool.execute(
-      'INSERT INTO docs (id, url) VALUES (?, ?)',
-      [id, url]
-    );
+  db.run('INSERT INTO docs (id, url) VALUES (?, ?)', [id, url], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error saving doc' });
+    }
     res.status(201).json({ id, url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error saving doc' });
-  }
+  });
 });
 
 app.get('/docs', async (req, res) => {
@@ -186,30 +149,26 @@ app.get('/docs', async (req, res) => {
   if (!id) {
     return res.status(400).json({ error: 'doc ID is required' });
   }
-
-  try {
-    const [rows] = await pool.execute(
-      'SELECT url FROM docs WHERE id = ?',
-      [id]
-    );
+  db.all('SELECT url FROM docs WHERE id = ?', [id], (error, rows) => {
+    if (error) {
+    console.error(error);
+    res.status(500).json({ error: 'error finding doc' });
+    }
     if (rows.length === 0) {
       return res.status(404).json({ error: 'doc not found' });
     }
     res.json({ url: rows[0].url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding doc' });
-  }
+  });
 });
 
 app.get('/docs/all', async (req, res) => {
-  try {
-    const [rows] = await pool.execute('SELECT id, url FROM docs');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding docs' });
-  }
+  db.all('SELECT id, url FROM docs', [], (error, rows) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error finding docs' });
+    }
+    res.json(rows); 
+  });
 });
 
 app.delete('/docs/delete', async (req, res) => {
@@ -218,19 +177,12 @@ app.delete('/docs/delete', async (req, res) => {
     return res.status(400).json({ error: 'doc ID is required' });
   }
 
-  try {
-    const [result] = await pool.execute(
-      'DELETE FROM docs WHERE id = ?',
-      [id]
-    );
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'doc not found' });
+  db.run('DELETE FROM docs WHERE id = ?', [id], function(error) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'error deleting doc' });
     }
-    res.json({ message: 'doc deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error deleting doc' });
-  }
+    res.json({ message: 'doc deleted successfully' });  });
 });
 
 
