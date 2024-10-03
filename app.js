@@ -15,7 +15,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// videos
 app.put('/upload', async (req, res) => {
   const body = req.body;
 
@@ -106,16 +105,6 @@ app.delete('/delete', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error deleting' });
-  }
-});
-
-app.get('/get/subject', async (req, res) => {
-  try {
-    const [rows] = await pool.execute('SELECT id, url FROM videos');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'error finding videos' });
   }
 });
 
