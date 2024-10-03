@@ -8,17 +8,18 @@ Weblog Web App with Express JS and React
 ``` sql
 CREATE DATABASE waap_db;
 USE waap_db;
-CREATE TABLE videos (
+CREATE TABLE db (
   id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
-);
-CREATE TABLE songs (
-  id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
-);
-CREATE TABLE docs (
-  id VARCHAR(36) PRIMARY KEY,
-  url TEXT NOT NULL
+  type TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  title TEXT NOT NULL,
+  author_uid TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  author_surname TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image TEXT NOT NULL,
+  link TEXT NOT NULL,
+  published TEXT NOT NULL
 );
 ```
 
