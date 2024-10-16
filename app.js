@@ -1,9 +1,14 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
+const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:5173', // You can also set '*' to allow all origins, but it's not recommended for production.
+}));
 
 const pool = mysql.createPool({
   host: 'localhost',
