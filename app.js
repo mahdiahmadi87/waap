@@ -7,8 +7,8 @@ app.use(express.json());
 
 const pool = mysql.createPool({
   host: 'localhost',
-  user: '<USERNAME>',
-  password: '<PASSWORDS>',
+  user: 'mahdi',
+  password: 'password',
   database: 'waap_db',
   waitForConnections: true,
   connectionLimit: 10,

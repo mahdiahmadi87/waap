@@ -1,0 +1,20 @@
+@font-face {
+    font-family:YekanX ;
+    src: url('./Data/test.woff2');
+}
+
+div>.css-1q964xs-MuiFormLabel-root-MuiInputLabel-root{
+    font-family: Yekanx;
+}
+div>.css-1eiam5b-MuiInputBase-input-MuiOutlinedInput-input{font-family:Yekanx}
+div>.css-1q964xs-MuiFormLabel-root-MuiInputLabel-root{font-family:Yekanx}
+div>.css-18pjc51-MuiFormLabel-root-MuiInputLabel-root{font-family:Yekanx}
+div>.css-1jk99ih-MuiInputBase-input-MuiOutlinedInput-input{font-family: Yekanx}
+div{direction: rtl;}
+
+
+/* div>li>.css-1h4bzp1-MuiButtonBase-root-MuiMenuItem-root{min-height:auto;font-family: Yekanx;} */
+/* li>.css-1h4bzp1-MuiButtonBase-root-MuiMenuItem-root{font-family: Yekanx} */
+
+MenuItem>li{font-family: Yekanx;}
+li>.css-1h4bzp1-MuiButtonBase-root-MuiMenuItem-root{font-family: Yekanx}
